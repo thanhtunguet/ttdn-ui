@@ -1,8 +1,11 @@
-import { Col, Row, Table } from "antd";
+import { Button, Col, Row, Table, Tooltip } from "antd";
 import React from "react";
 import { Company } from "../models/Company";
 import { companyRepository } from "../repositories/company-repository";
 import moment from "moment";
+import AddressLink from "../components/AddressLink";
+import { FundViewOutlined } from "@ant-design/icons";
+import CompanyDetailsModal from "./CompanyDetailModal";
 
 export default function CompanyMasterPage() {
   const [companies, setCompanies] = React.useState<Company[]>([]);
@@ -28,6 +31,19 @@ export default function CompanyMasterPage() {
         setLoading(false);
       });
   }, [skip, take]);
+
+  const [currentCompany, setCurrentCompany] = React.useState<Company | null>(
+    null
+  );
+  const [isDetailOpen, setIsDetailOpen] = React.useState<boolean>(false);
+  const handleViewCompanyDetail = React.useCallback((company: Company) => {
+    setCurrentCompany(company);
+    setIsDetailOpen(true);
+  }, []);
+
+  const handleCloseDetail = React.useCallback(() => {
+    setIsDetailOpen(false);
+  }, []);
 
   return (
     <Row>
@@ -65,6 +81,13 @@ export default function CompanyMasterPage() {
               title: "Tên công ty",
               dataIndex: "name",
               key: "name",
+              render(name: string, record: Company) {
+                return (
+                  <Tooltip title={record.description}>
+                    <span>{name}</span>
+                  </Tooltip>
+                );
+              },
             },
             {
               title: "Người đại diện",
@@ -72,9 +95,24 @@ export default function CompanyMasterPage() {
               key: "representative",
             },
             {
+              title: "Ngành nghề chính",
+              dataIndex: "mainBusiness",
+              key: "mainBusiness",
+              render(mainBusiness: string, record: Company) {
+                return (
+                  <Tooltip title={record.description}>
+                    <span>{mainBusiness}</span>
+                  </Tooltip>
+                );
+              },
+            },
+            {
               title: "Tỉnh thành",
               dataIndex: "provinceName",
               key: "provinceName",
+              render(_: string, record: Company) {
+                return <AddressLink company={record} />;
+              },
             },
             {
               title: "Ngày tạo",
@@ -82,8 +120,34 @@ export default function CompanyMasterPage() {
               key: "createdAt",
               render: (value: Date) => moment(value).format("DD/MM/YYYY"),
             },
+            {
+              title: "Hành động",
+              dataIndex: "id",
+              key: "actions",
+              render(id: number, record: Company) {
+                return (
+                  <div className="flex">
+                    <Button
+                      type="link"
+                      icon={<FundViewOutlined />}
+                      onClick={() => {
+                        handleViewCompanyDetail(record);
+                      }}
+                    ></Button>
+                  </div>
+                );
+              },
+            },
           ]}
         />
+
+        {currentCompany && (
+          <CompanyDetailsModal
+            open={isDetailOpen}
+            company={currentCompany}
+            onClose={handleCloseDetail}
+          ></CompanyDetailsModal>
+        )}
       </Col>
     </Row>
   );

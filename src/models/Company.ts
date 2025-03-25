@@ -44,4 +44,12 @@ export interface Company {
     wardName: string;
 
     isCrawledFull: boolean;
+
+    businesses: Business[];
+}
+
+interface Business {
+    id: number;
+
+    name: string;
 }
