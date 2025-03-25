@@ -124,7 +124,7 @@ export default function CompanyMasterPage() {
               title: "Hành động",
               dataIndex: "id",
               key: "actions",
-              render(id: number, record: Company) {
+              render(_: number, record: Company) {
                 return (
                   <div className="flex">
                     <Button
