@@ -1,9 +1,9 @@
 // src/components/Provinces/ProvinceList.tsx
-import React, { useEffect, useState } from 'react';
-import { Table, message } from 'antd';
-import { provinceApi } from '../../services/api';
-import { ProvinceDto } from '../../types';
-import { ColumnsType } from 'antd/es/table';
+import React, { useEffect, useState } from "react";
+import { Table, message } from "antd";
+import { provinceApi } from "../../services/api";
+import { ProvinceDto } from "../../types";
+import { ColumnsType } from "antd/es/table";
 
 const ProvinceList: React.FC = () => {
   const [provinces, setProvinces] = useState<ProvinceDto[]>([]);
@@ -16,32 +16,24 @@ const ProvinceList: React.FC = () => {
 
   const columns: ColumnsType<ProvinceDto> = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Code",
+      dataIndex: "code",
+      key: "code",
     },
     {
-      title: 'English Name',
-      dataIndex: 'englishName',
-      key: 'englishName',
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
+
     {
-      title: 'Code',
-      dataIndex: 'code',
-      key: 'code',
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
     },
   ];
 
-  useEffect(() => {
-    loadProvinces();
-  }, [pagination]);
-
-  const loadProvinces = async () => {
+  const loadProvinces = React.useCallback(async () => {
     setLoading(true);
     try {
       const [data, count] = await Promise.all([
@@ -54,11 +46,16 @@ const ProvinceList: React.FC = () => {
       setProvinces(data);
       setTotal(count);
     } catch (error) {
-      message.error('Failed to load provinces');
+      console.error(error);
+      message.error("Failed to load provinces");
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination]);
+
+  useEffect(() => {
+    loadProvinces();
+  }, [loadProvinces]);
 
   return (
     <Table

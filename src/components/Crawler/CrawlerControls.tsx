@@ -80,10 +80,18 @@ const CrawlerControls: React.FC = () => {
       <Card title="Province Crawl">
         <Form onFinish={handleProvinceCrawl}>
           <Space>
-            <Input placeholder="Enter province name" />
-            <Button type="primary" loading={loading.province} htmlType="submit">
-              Start Province Crawl
-            </Button>
+            <Form.Item name="provinceUrl">
+              <Input placeholder="Enter province name" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                loading={loading.province}
+                htmlType="submit"
+              >
+                Start Province Crawl
+              </Button>
+            </Form.Item>
           </Space>
         </Form>
       </Card>
@@ -99,9 +107,11 @@ const CrawlerControls: React.FC = () => {
             >
               <Input placeholder="Enter page URL" />
             </Form.Item>
-            <Button type="primary" loading={loading.page} htmlType="submit">
-              Start Page Crawl
-            </Button>
+            <Form.Item>
+              <Button type="primary" loading={loading.page} htmlType="submit">
+                Start Page Crawl
+              </Button>
+            </Form.Item>
           </Space>
         </Form>
       </Card>
